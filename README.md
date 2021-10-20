@@ -1,5 +1,5 @@
 # Transcriptomics Analysis 
-### 
+### How to perform a standard analysis of microarray transcriptomics data using R
 
 #### Background:
 - 
