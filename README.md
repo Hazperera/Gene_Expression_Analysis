@@ -1,5 +1,4 @@
-# Transcriptomics Analysis 
-### How to perform a standard analysis of microarray transcriptomics data using R
+#  MicroArray Transcriptomics(Gene Expression) Analysis using R
 
 #### Background:
 - Use of microarray data for gene expression analysis is still a common practice even though the more advanced RNA-Seq data is gaining more popularity.
