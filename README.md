@@ -6,7 +6,7 @@
 - R-[Bioconductor](https://www.bioconductor.org/) is an open-source software with numerous tools for the analysis of high-throughput genomic data.
 
 #### Objective:
-This project aims to perform a microarray gene expression analysis using human pancreatic islet data generated from Affymetrix Human Gene 1.0 ST Array [transcript (gene) version] platform by following a stepwise protocol adopted from [Ming-an Sun et al.(2018)](https://pubmed.ncbi.nlm.nih.gov/29508287/)
+This project aims to perform a microarray gene expression analysis using human pancreatic islet data generated from Affymetrix Human Gene 1.0 ST Array [transcript (gene) version] platform by following a stepwise protocol
 
 #### Dataset Description: The expression arrays in 89 human pancreatic islet donors with different levels of blood glucose (HbA1c).
 NCBI GEO Accession No: [GSE50397](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE50397) 
@@ -18,4 +18,4 @@ NCBI GEO Accession No: [GSE50397](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi
 </p>
 
 <p align="center">
-<a href="https://www.vectorstock.com/royalty-free-vector/dna-icon-white-background-vector-36784221">Dna icon white background vector by vectorstock</a></p>
+<a href="https://www.vectorstock.com/royalty-free-vector/dna-icon-white-background-vector-36784221"> Dna icon white background vector by vectorstock</a></p>
