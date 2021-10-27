@@ -1,6 +1,10 @@
-## Ref: Taneera et al., 2015 (doi:10.1093/hmg/ddu610)
-## GEO Accession No: GSE50397 
-## Platform: [HuGene-1_0-st] Affymetrix Human Gene 1.0 ST Array  
+
+## File name: Microarray_Transcriptomics_Analysis.R
+## Author: Hasani Perera
+## Contact: heperera826@gmail.com
+## Date created: 25/10/2021
+## Date last modified: 27/10/2021
+## R Version: 4.0.3 
 
 ## set path
 setwd("~/Documents/HazGit/Transcriptomics_Analysis")
@@ -22,8 +26,7 @@ install.packages("ggplot2")
 #load packages 
 library(GEOquery)
 
-
-## GSE50397 - 
+## GSE50397 - Taneera et al., 2015 (doi:10.1093/hmg/ddu610)
 ## GPL6244  [HuGene-1_0-st] Affymetrix Human Gene 1.0 ST Array [transcript (gene) version])   
 
 
