@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 
 ## File name: Microarray_Transcriptomics_Analysis.R
 ## Author: Hasani Perera
@@ -5,6 +6,15 @@
 ## Date created: 20/10/2021
 ## Date last modified: 27/10/2021
 ## R Version: 4.0.3 
+=======
+## File name: Microarray Transcriptomics Analysis in R
+## Author: Hasani Perera
+## Contact: heperera826@gmail.com
+## Date created: 20/10/2021
+## Date last modified: 25/11/2021
+## R Version: 4.0.3
+## Ref: Taneera et al., 2015 (doi:10.1093/hmg/ddu610)
+>>>>>>> Stashed changes
 
 ## set path
 setwd("~/Documents/HazGit/Transcriptomics_Analysis")
@@ -26,9 +36,14 @@ install.packages("ggplot2")
 #load packages 
 library(GEOquery)
 
+<<<<<<< Updated upstream
 ## GSE50397 - Taneera et al., 2015 (doi:10.1093/hmg/ddu610)
 ## GPL6244  [HuGene-1_0-st] Affymetrix Human Gene 1.0 ST Array [transcript (gene) version])   
 
+=======
+## GEO Accession No: GSE50397 
+## Platform: [HuGene-1_0-st] Affymetrix Human Gene 1.0 ST Array  - GPL6244 
+>>>>>>> Stashed changes
 
 #extract .cell files to local machine - GEO Series records (GSExxxxx)
 gse <- getGEO("GSE50397",GSEMatrix=FALSE)
@@ -111,6 +126,29 @@ keytypes(hugene10sttranscriptcluster.db)
 gns<- select(hugene10sttranscriptcluster.db,keys(hugene10sttranscriptcluster.db),
              c("ENTREZID", "SYMBOL"))
 head(gns)
+tail(gns)
+
+## optional - to keep one match per gene
+# gns <- gns[!duplicated(gns[,1]),]
+# tail(gns)
+
+#set row names to ProbeID (for convenience)
+gns = gns[,-1]
+row.names(gns) = keys(hugene10sttranscriptcluster.db)
+tail(gns)
+
+#retrieve gene expression matrix from eset as a dataframe
+expr <- data.frame(exprs(eset))
+head(expr)
+
+#merge gene expression and annotation according to row names (probe IDs)
+expr.anno <- merge(x=gns,y=expr,by.y=0, by.x=2,all=TRUE)
+head(expr.anno)
+
+#save the annotated gene expression matrix to local file
+write.table(expr.anno, file = "rma_norm_expr.anno.txt",sep = "\t", 
+            row.names = FALSE, col.names = TRUE, quote =FALSE)
+write.csv(expr.anno, file = "rma_norm_expr.anno.csv")
 
 
 
