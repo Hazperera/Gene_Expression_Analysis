@@ -133,9 +133,3 @@ head(expr.anno)
 write.table(expr.anno, file = "rma_norm_expr.anno.txt",sep = "\t", 
             row.names = FALSE, col.names = TRUE, quote =FALSE)
 write.csv(expr.anno, file = "rma_norm_expr.anno.csv")
-
-
-
-
-
-
