@@ -111,6 +111,29 @@ keytypes(hugene10sttranscriptcluster.db)
 gns<- select(hugene10sttranscriptcluster.db,keys(hugene10sttranscriptcluster.db),
              c("ENTREZID", "SYMBOL"))
 head(gns)
+tail(gns)
+
+## optional - to keep one match per gene
+# gns <- gns[!duplicated(gns[,1]),]
+# tail(gns)
+
+#set row names to ProbeID (for convenience)
+gns = gns[,-1]
+row.names(gns) = keys(hugene10sttranscriptcluster.db)
+tail(gns)
+
+#retrieve gene expression matrix from eset as a dataframe
+expr <- data.frame(exprs(eset))
+head(expr)
+
+#merge gene expression and annotation according to row names (probe IDs)
+expr.anno <- merge(x=gns,y=expr,by.y=0, by.x=2,all=TRUE)
+head(expr.anno)
+
+#save the annotated gene expression matrix to local file
+write.table(expr.anno, file = "rma_norm_expr.anno.txt",sep = "\t", 
+            row.names = FALSE, col.names = TRUE, quote =FALSE)
+write.csv(expr.anno, file = "rma_norm_expr.anno.csv")
 
 
 
