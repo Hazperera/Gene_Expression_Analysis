@@ -1,12 +1,3 @@
-<<<<<<< Updated upstream
-
-## File name: Microarray_Transcriptomics_Analysis.R
-## Author: Hasani Perera
-## Contact: heperera826@gmail.com
-## Date created: 20/10/2021
-## Date last modified: 27/10/2021
-## R Version: 4.0.3 
-=======
 ## File name: Microarray Transcriptomics Analysis in R
 ## Author: Hasani Perera
 ## Contact: heperera826@gmail.com
@@ -14,7 +5,6 @@
 ## Date last modified: 25/11/2021
 ## R Version: 4.0.3
 ## Ref: Taneera et al., 2015 (doi:10.1093/hmg/ddu610)
->>>>>>> Stashed changes
 
 ## set path
 setwd("~/Documents/HazGit/Transcriptomics_Analysis")
@@ -23,7 +13,7 @@ setwd("~/Documents/HazGit/Transcriptomics_Analysis")
 if (!requireNamespace("BiocManager", quietly = TRUE))
   install.packages("BiocManager")
 BiocManager::install("GEOquery")
-BiocManager::install("oligo")
+nBiocManager::install("oligo")
 BiocManager::install("pd.hugene.1.0.st.v1")
 BiocManager::install("hugene10sttranscriptcluster.db")
 BiocManager::install("arrayQualityMetrics")
@@ -36,17 +26,14 @@ install.packages("ggplot2")
 #load packages 
 library(GEOquery)
 
-<<<<<<< Updated upstream
-## GSE50397 - Taneera et al., 2015 (doi:10.1093/hmg/ddu610)
-## GPL6244  [HuGene-1_0-st] Affymetrix Human Gene 1.0 ST Array [transcript (gene) version])   
-
-=======
 ## GEO Accession No: GSE50397 
 ## Platform: [HuGene-1_0-st] Affymetrix Human Gene 1.0 ST Array  - GPL6244 
->>>>>>> Stashed changes
 
 #extract .cell files to local machine - GEO Series records (GSExxxxx)
 gse <- getGEO("GSE50397",GSEMatrix=FALSE)
+
+#if file is already downloaded
+# gse <- file.choose()
 head(Meta(gse))
 # show(gse)
 
@@ -60,8 +47,8 @@ head(Meta(GSMList(gse)[[1]]))
 # names of the GPLs represented
 names(GPLList(gse))
 
-#access raw data (downloaded file paths)
-file_paths = getGEOSuppFiles("GSE50397")
+# access raw data (downloaded file paths)
+file_paths = getGEOSuppFiles("GPL6244")
 head(file_paths)
 
 # choose tar file
@@ -78,25 +65,21 @@ length(cel.files)
 #  extract gz archives - gunzip
 sapply(paste("Raw_Data", cel.files, sep="/"), gunzip)
 
-#list of all cel files in the directory
-cel.files <- list.files("Raw_Data/", pattern = ".CEL")
-head(cel.files)
-length(cel.files)
-cel.files
-
 ##------------------------ 1) DATA PREPROCESSING ------------------------------
 
 #load packages 
 library(oligo)
-library(affy)
+# library(affy)
 
-#re-specify sample names
-sample.names = c(1:89)
-sample.names
+#list of all cel files in the directory
+celpath <- "~/Documents/HazGit/Transcriptomics_Analysis/Raw_Data"
+celfiles_list <- list.files(celpath,pattern = ".CEL", full.names=TRUE)
+length(celfiles_list)
+head(celfiles_list)
 
-#read files to memory
-affy.raw <- read.celfiles(cel.files,sampleNames=sample.names)
-head(affy.raw)
+# import CEL files containing raw probe-level data into an R AffyBatch object
+cell_files <- read.celfiles(celfiles_list)
+head(cell_files)
 
 #load packages 
 library(pd.hugene.1.0.st.v1)
@@ -105,7 +88,8 @@ library(pd.hugene.1.0.st.v1)
 ??pd.hugene.1.0.st.v1
 
 #perform RMA normalization (Robust Multi-Array Average)
-eset <- rma(affy.raw)
+# converts an AffyBatch object into an ExpressionSet object
+eset <- rma(cell_files)
 nrow(eset)
 
 #save the expression data (output - normalized and log2 transformed)
