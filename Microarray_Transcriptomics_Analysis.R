@@ -23,11 +23,11 @@ install.packages("ggplot2")
 
 ##------------------------ QUERY RAW DATA ------------------------------
 
-#load packages 
+#load packages
 library(GEOquery)
 
-## GEO Accession No: GSE50397 
-## Platform: [HuGene-1_0-st] Affymetrix Human Gene 1.0 ST Array  - GPL6244 
+## GEO Accession No: GSE50397
+## Platform: [HuGene-1_0-st] Affymetrix Human Gene 1.0 ST Array  - GPL6244
 
 #extract .cell files to local machine - GEO Series records (GSExxxxx)
 gse <- getGEO("GSE50397",GSEMatrix=FALSE)
@@ -35,7 +35,6 @@ gse <- getGEO("GSE50397",GSEMatrix=FALSE)
 #if file is already downloaded
 # gse <- file.choose()
 head(Meta(gse))
-# show(gse)
 
 # names of all the GSM objects contained in the GSE
 names(GSMList(gse))
@@ -48,7 +47,7 @@ head(Meta(GSMList(gse)[[1]]))
 names(GPLList(gse))
 
 # access raw data (downloaded file paths)
-file_paths = getGEOSuppFiles("GPL6244")
+file_paths = getGEOSuppFiles("GSE50397")
 head(file_paths)
 
 # choose tar file
@@ -67,12 +66,11 @@ sapply(paste("Raw_Data", cel.files, sep="/"), gunzip)
 
 ##------------------------ 1) DATA PREPROCESSING ------------------------------
 
-#load packages 
+#load packages
 library(oligo)
-# library(affy)
 
 #list of all cel files in the directory
-celpath <- "~/Documents/HazGit/Transcriptomics_Analysis/Raw_Data"
+celpath <- "~/Documents/Learning/Bioinformatics/MicroArray Analysis/Nordic Islet Analysis/Raw_Data"
 celfiles_list <- list.files(celpath,pattern = ".CEL", full.names=TRUE)
 length(celfiles_list)
 head(celfiles_list)
@@ -81,55 +79,84 @@ head(celfiles_list)
 cell_files <- read.celfiles(celfiles_list)
 head(cell_files)
 
-#load packages 
+#load packages
 library(pd.hugene.1.0.st.v1)
 
-#probe set annotation 
+#probe set annotation
 ??pd.hugene.1.0.st.v1
+
+getClass("GeneFeatureSet")
+
+# max expression
+max(exprs(cell_files[1:1102489,1:89]))
+
+# replace sampleNames
+filename <- sampleNames(cell_files)
+pData(cell_files)$filename <- filename
+pData(cell_files)$filename
+sampleNames <- sub("-islet.CEL$","",filename)
+sampleNames <- sub("_HTL[[:digit:]]*","",sampleNames)
+sampleNames(cell_files) <- sampleNames
+sampleNames(cell_files)
+
+# information on variable values/ meta-data
+pData(cell_files)
+
+#boxplot before RMA normalization
+boxplot(cell_files, target="probeset")
+mtext(text="log2 Intensity", side=2, line=3, las=0) 
+mtext(text="Samples", side=1, line=3, las=1) 
 
 #perform RMA normalization (Robust Multi-Array Average)
 # converts an AffyBatch object into an ExpressionSet object
-eset <- rma(cell_files)
-nrow(eset)
+normData <- rma(cell_files)
+nrow(normData)
+
+#boxplot after RMA normalization
+boxplot(normData, target="probeset")
+mtext(text="log2 Intensity", side=2, line=3, las=0) 
+mtext(text="Samples", side=1, line=3, las=1) 
 
 #save the expression data (output - normalized and log2 transformed)
-write.exprs(eset,file="rma_norm_expr.txt")
+exprs(normData)[1:3,1:5]
 
-#load packages 
+write.exprs(normData,file="RMA_Normalised_Original.txt")
+
+#load packages
 library(Biobase)
 library(hugene10sttranscriptcluster.db)
 
-#gene annotation 
+#gene annotation
 ??Biobase
 ??hugene10sttranscriptcluster.db
 
-#get a list of retrievable data 
+#get a list of retrievable data
 keytypes(hugene10sttranscriptcluster.db)
 
 #retrieve data for selected objects (ENTREZID and SYMBOL) as a data frame
-gns<- select(hugene10sttranscriptcluster.db,keys(hugene10sttranscriptcluster.db),
+anno<- select(hugene10sttranscriptcluster.db,keys(hugene10sttranscriptcluster.db),
              c("ENTREZID", "SYMBOL"))
-head(gns)
-tail(gns)
+head(anno)
+tail(anno)
 
 ## optional - to keep one match per gene
-# gns <- gns[!duplicated(gns[,1]),]
-# tail(gns)
+anno <- anno[!duplicated(anno[,1]),]
+tail(anno)
 
 #set row names to ProbeID (for convenience)
-gns = gns[,-1]
-row.names(gns) = keys(hugene10sttranscriptcluster.db)
-tail(gns)
+anno = anno[,-1]
+row.names(anno) = keys(hugene10sttranscriptcluster.db)
+tail(anno)
 
-#retrieve gene expression matrix from eset as a dataframe
-expr <- data.frame(exprs(eset))
+#retrieve gene expression matrix from normData as a dataframe
+expr <- data.frame(exprs(normData))
 head(expr)
 
 #merge gene expression and annotation according to row names (probe IDs)
-expr.anno <- merge(x=gns,y=expr,by.y=0, by.x=2,all=TRUE)
-head(expr.anno)
+expr_anno <- merge(x=anno,y=expr,by.y=0, by.x=2,all=TRUE)
+head(expr_anno)
 
 #save the annotated gene expression matrix to local file
-write.table(expr.anno, file = "rma_norm_expr.anno.txt",sep = "\t", 
+write.table(expr_anno, file = "RMA_Norm_Expr.txt",sep = "\t",
             row.names = FALSE, col.names = TRUE, quote =FALSE)
-write.csv(expr.anno, file = "rma_norm_expr.anno.csv")
+write.csv(expr_anno, file = "RMA_Norm_Expr_Anno.csv")
