@@ -1,10 +1,12 @@
-## File name: Microarray Transcriptomics Analysis in R
-## Author: Hasani Perera
-## Contact: heperera826@gmail.com
-## Date created: 20/10/2021
-## Date last modified: 25/11/2021
-## R Version: 4.0.3
-## Ref: Taneera et al., 2015 (doi:10.1093/hmg/ddu610)
+"""
+File name: Microarray Transcriptomics Analysis in R
+Author: Hasani Perera
+Contact: heperera826@gmail.com
+Date created: 20/10/2021
+Date last modified: 25/11/2021
+R Version: 4.0.3
+Ref: Taneera et al., 2015 (doi:10.1093/hmg/ddu610)
+"""
 
 ## set path
 setwd("~/Documents/HazGit/Transcriptomics_Analysis")
